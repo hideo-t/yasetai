@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>わたしのカラダ診断 ✿</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&family=Sacramento&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+  :root{
+    --rose:rgb(224,130,141);
+    --rose-light:rgb(245,200,206);
+    --rose-pale:rgb(253,240,242);
+    --peach:rgb(255,213,186);
+    --lavender:rgb(210,190,230);
+    --lavender-light:rgb(235,225,248);
+    --cream:rgb(255,252,248);
+    --text:rgb(90,70,75);
+    --text-light:rgb(150,130,135);
+    --white:rgb(255,255,255);
+  }
+
+  body{
+    font-family:'Zen Maru Gothic',sans-serif;
+    color:var(--text);
+    min-height:100dvh;
+    background:var(--cream);
+    overflow-x:hidden;
+    position:relative;
+  }
+
+  /* ── 背景デコレーション ── */
+  body::before{
+    content:'';
+    position:fixed;
+    inset:0;
+    background:
+      radial-gradient(ellipse 600px 600px at 10% 20%, rgba(245,200,206,.45) 0%, transparent 70%),
+      radial-gradient(ellipse 500px 500px at 85% 15%, rgba(210,190,230,.35) 0%, transparent 70%),
+      radial-gradient(ellipse 400px 400px at 50% 80%, rgba(255,213,186,.3) 0%, transparent 70%);
+    pointer-events:none;
+    z-index:0;
+  }
+
+  .petal{
+    position:fixed;
+    width:12px;height:12px;
+    background:var(--rose-light);
+    border-radius:50% 0 50% 0;
+    opacity:.35;
+    pointer-events:none;
+    z-index:0;
+    animation:fall linear infinite;
+  }
+  .petal:nth-child(2n){background:var(--lavender-light);width:10px;height:10px;opacity:.28}
+  .petal:nth-child(3n){background:var(--peach);width:14px;height:14px;opacity:.3}
+
+  @keyframes fall{
+    0%{transform:translateY(-20px) rotate(0deg);opacity:0}
+    10%{opacity:.35}
+    90%{opacity:.35}
+    100%{transform:translateY(100dvh) rotate(360deg);opacity:0}
+  }
+
+  /* ── メインコンテナ ── */
+  .container{
+    position:relative;
+    z-index:1;
+    max-width:440px;
+    margin:0 auto;
+    padding:40px 24px 60px;
+    min-height:100dvh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+
+  /* ── ヘッダー ── */
+  .logo{
+    font-family:'Sacramento',cursive;
+    font-size:42px;
+    color:var(--rose);
+    margin-bottom:4px;
+    letter-spacing:1px;
+    animation:fadeDown .8s ease-out;
+  }
+  .subtitle{
+    font-size:13px;
+    color:var(--text-light);
+    letter-spacing:3px;
+    margin-bottom:36px;
+    animation:fadeDown .8s ease-out .15s both;
+  }
+
+  @keyframes fadeDown{
+    from{opacity:0;transform:translateY(-16px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+
+  /* ── カード ── */
+  .card{
+    width:100%;
+    background:rgba(255,255,255,.82);
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+    border-radius:28px;
+    padding:36px 28px 32px;
+    box-shadow:
+      0 4px 24px rgba(200,160,170,.15),
+      0 1px 3px rgba(200,160,170,.1),
+      inset 0 1px 0 rgba(255,255,255,.8);
+    border:1px solid rgba(245,200,206,.35);
+    animation:cardIn .7s ease-out .3s both;
+    margin-bottom:20px;
+  }
+
+  @keyframes cardIn{
+    from{opacity:0;transform:translateY(24px) scale(.97)}
+    to{opacity:1;transform:translateY(0) scale(1)}
+  }
+
+  .card-title{
+    text-align:center;
+    font-size:15px;
+    font-weight:500;
+    color:var(--rose);
+    margin-bottom:28px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+  }
+  .card-title .flower{font-size:18px;opacity:.7}
+
+  /* ── 入力フィールド ── */
+  .field{margin-bottom:22px}
+  .field label{
+    display:block;
+    font-size:12px;
+    font-weight:500;
+    color:var(--text-light);
+    letter-spacing:1.5px;
+    margin-bottom:8px;
+    padding-left:4px;
+  }
+  .input-wrap{
+    position:relative;
+    display:flex;
+    align-items:center;
+  }
+  .input-wrap input{
+    width:100%;
+    padding:14px 60px 14px 18px;
+    border:1.5px solid var(--rose-light);
+    border-radius:16px;
+    font-family:'Zen Maru Gothic',sans-serif;
+    font-size:20px;
+    font-weight:500;
+    color:var(--text);
+    background:var(--rose-pale);
+    outline:none;
+    transition:all .3s ease;
+    -webkit-appearance:none;
+  }
+  .input-wrap input:focus{
+    border-color:var(--rose);
+    background:var(--white);
+    box-shadow:0 0 0 4px rgba(224,130,141,.12);
+  }
+  .input-wrap input::placeholder{color:rgba(150,130,135,.4);font-size:16px}
+  .unit{
+    position:absolute;
+    right:18px;
+    font-size:14px;
+    color:var(--text-light);
+    font-weight:500;
+    pointer-events:none;
+  }
+
+  /* ── ボタン ── */
+  .btn{
+    width:100%;
+    padding:16px;
+    border:none;
+    border-radius:18px;
+    font-family:'Zen Maru Gothic',sans-serif;
+    font-size:16px;
+    font-weight:700;
+    letter-spacing:2px;
+    cursor:pointer;
+    transition:all .3s ease;
+    margin-top:8px;
+    position:relative;
+    overflow:hidden;
+    background:linear-gradient(135deg, var(--rose) 0%, rgb(200,140,180) 50%, var(--lavender) 100%);
+    color:var(--white);
+    box-shadow:0 4px 16px rgba(224,130,141,.35);
+  }
+  .btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 6px 24px rgba(224,130,141,.45);
+  }
+  .btn:active{transform:translateY(0);box-shadow:0 2px 8px rgba(224,130,141,.3)}
+  .btn::after{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:linear-gradient(135deg,rgba(255,255,255,.25) 0%,transparent 60%);
+    pointer-events:none;
+  }
+
+  /* ── 結果 ── */
+  .result-card{
+    width:100%;
+    background:rgba(255,255,255,.85);
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+    border-radius:28px;
+    padding:32px 28px 36px;
+    box-shadow:
+      0 4px 24px rgba(200,160,170,.15),
+      inset 0 1px 0 rgba(255,255,255,.8);
+    border:1px solid rgba(245,200,206,.35);
+    text-align:center;
+    display:none;
+    margin-bottom:20px;
+  }
+  .result-card.show{
+    display:block;
+    animation:resultIn .6s ease-out;
+  }
+  @keyframes resultIn{
+    from{opacity:0;transform:translateY(20px) scale(.95)}
+    to{opacity:1;transform:translateY(0) scale(1)}
+  }
+
+  .result-emoji{font-size:56px;margin-bottom:12px;animation:bounce 1s ease-in-out}
+  @keyframes bounce{
+    0%,100%{transform:scale(1)}
+    30%{transform:scale(1.25)}
+    50%{transform:scale(.95)}
+    70%{transform:scale(1.08)}
+  }
+
+  .result-type{
+    font-size:22px;
+    font-weight:700;
+    margin-bottom:6px;
+  }
+  .result-bmi{
+    font-size:13px;
+    color:var(--text-light);
+    margin-bottom:18px;
+    letter-spacing:.5px;
+  }
+  .result-msg{
+    font-size:14px;
+    line-height:1.9;
+    color:var(--text);
+    margin-bottom:22px;
+    padding:0 4px;
+  }
+
+  /* BMI バー */
+  .bmi-bar-wrap{margin:20px 0 6px}
+  .bmi-labels{
+    display:flex;
+    justify-content:space-between;
+    font-size:10px;
+    color:var(--text-light);
+    margin-bottom:6px;
+    padding:0 2px;
+  }
+  .bmi-bar{
+    height:10px;
+    border-radius:10px;
+    background:linear-gradient(90deg,
+      rgb(150,200,230) 0%,
+      rgb(170,220,180) 22%,
+      rgb(255,220,140) 50%,
+      rgb(240,170,140) 75%,
+      rgb(220,130,140) 100%
+    );
+    position:relative;
+    overflow:visible;
+  }
+  .bmi-marker{
+    position:absolute;
+    top:-5px;
+    width:20px;height:20px;
+    border-radius:50%;
+    background:var(--white);
+    border:3px solid var(--rose);
+    box-shadow:0 2px 8px rgba(0,0,0,.15);
+    transform:translateX(-50%);
+    transition:left .8s cubic-bezier(.34,1.56,.64,1);
+  }
+
+  /* ── カテゴリタグ ── */
+  .tag{
+    display:inline-block;
+    padding:5px 14px;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:500;
+    letter-spacing:1px;
+  }
+  .tag-thin{background:rgb(200,225,245);color:rgb(70,120,160)}
+  .tag-under{background:rgb(180,215,240);color:rgb(60,110,150)}
+  .tag-normal{background:rgb(200,230,200);color:rgb(70,130,70)}
+  .tag-over{background:rgb(255,225,180);color:rgb(160,110,50)}
+  .tag-obese1{background:rgb(250,200,180);color:rgb(170,90,60)}
+  .tag-obese2{background:rgb(240,180,180);color:rgb(160,70,70)}
+  .tag-obese3{background:rgb(230,165,170);color:rgb(150,60,65)}
+  .tag-obese4{background:rgb(220,150,160);color:rgb(140,50,60)}
+
+  /* ── リセットボタン ── */
+  .btn-reset{
+    background:transparent;
+    border:1.5px solid var(--rose-light);
+    color:var(--rose);
+    box-shadow:none;
+    margin-top:4px;
+    font-size:14px;
+    letter-spacing:1px;
+  }
+  .btn-reset:hover{
+    background:var(--rose-pale);
+    box-shadow:none;
+    transform:translateY(-1px);
+  }
+
+  /* ── アドバイスセクション ── */
+  .advice{
+    background:var(--rose-pale);
+    border-radius:16px;
+    padding:16px 18px;
+    margin-top:16px;
+    font-size:13px;
+    line-height:1.8;
+    color:var(--text);
+    text-align:left;
+  }
+  .advice-title{
+    font-size:12px;
+    font-weight:700;
+    color:var(--rose);
+    margin-bottom:6px;
+    letter-spacing:1px;
+  }
+
+  /* ── ideal weight ── */
+  .ideal{
+    margin-top:14px;
+    padding:12px 16px;
+    background:linear-gradient(135deg, rgba(210,190,230,.2), rgba(245,200,206,.2));
+    border-radius:14px;
+    font-size:13px;
+    color:var(--text);
+  }
+  .ideal strong{color:var(--rose);font-size:18px}
+
+  /* ── フッター ── */
+  .footer{
+    margin-top:auto;
+    padding-top:32px;
+    text-align:center;
+    font-size:11px;
+    color:var(--text-light);
+    opacity:.6;
+    letter-spacing:.5px;
+  }
+
+  /* ── アニメーション ── */
+  .shake{animation:shake .4s ease-in-out}
+  @keyframes shake{
+    0%,100%{transform:translateX(0)}
+    25%{transform:translateX(-6px)}
+    75%{transform:translateX(6px)}
+  }
+
+  .error-msg{
+    font-size:11px;
+    color:rgb(220,100,100);
+    margin-top:6px;
+    padding-left:4px;
+    display:none;
+  }
+  .error-msg.show{display:block;animation:fadeDown .3s ease-out}
+</style>
+</head>
+<body>
+
+<!-- 花びらアニメーション -->
+<div id="petals"></div>
+
+<div class="container">
+  <div class="logo">My Body Check</div>
+  <p class="subtitle">カラダ タイプ 診 断</p>
+
+  <!-- 入力カード -->
+  <div class="card" id="inputCard">
+    <div class="card-title">
+      <span class="flower">❀</span>
+      あなたの身長と体重をおしえてね
+      <span class="flower">❀</span>
+    </div>
+
+    <div class="field">
+      <label>身 長</label>
+      <div class="input-wrap">
+        <input type="number" id="height" placeholder="158.0" step="0.1" min="100" max="250" inputmode="decimal">
+        <span class="unit">cm</span>
+      </div>
+      <div class="error-msg" id="heightError">100〜250cmで入力してね</div>
+    </div>
+
+    <div class="field">
+      <label>体 重</label>
+      <div class="input-wrap">
+        <input type="number" id="weight" placeholder="52.0" step="0.1" min="20" max="300" inputmode="decimal">
+        <span class="unit">kg</span>
+      </div>
+      <div class="error-msg" id="weightError">20〜300kgで入力してね</div>
+    </div>
+
+    <button class="btn" onclick="diagnose()">✿ 診断する ✿</button>
+  </div>
+
+  <!-- 結果カード -->
+  <div class="result-card" id="resultCard">
+    <div class="result-emoji" id="resultEmoji"></div>
+    <div class="result-type" id="resultType"></div>
+    <div id="resultTag"></div>
+    <div class="result-bmi" id="resultBmi"></div>
+
+    <div class="bmi-bar-wrap">
+      <div class="bmi-labels">
+        <span>やせ</span>
+        <span>ふつう</span>
+        <span>ぽっちゃり</span>
+        <span>ふくよか</span>
+      </div>
+      <div class="bmi-bar">
+        <div class="bmi-marker" id="bmiMarker"></div>
+      </div>
+    </div>
+
+    <div class="result-msg" id="resultMsg"></div>
+
+    <div class="ideal" id="idealWeight"></div>
+
+    <div class="advice" id="advice">
+      <div class="advice-title">✿ ワンポイントアドバイス</div>
+      <div id="adviceText"></div>
+    </div>
+
+    <button class="btn btn-reset" onclick="reset()">もういちど診断する</button>
+  </div>
+
+  <div class="footer">※ BMI（体格指数）による簡易診断です<br>気になる方は専門家にご相談ください ♡</div>
+</div>
+
+<script>
+// 花びらを生成
+(function(){
+  const container = document.getElementById('petals');
+  for(let i = 0; i < 15; i++){
+    const p = document.createElement('div');
+    p.className = 'petal';
+    p.style.left = Math.random()*100 + '%';
+    p.style.animationDuration = (6 + Math.random()*8) + 's';
+    p.style.animationDelay = (Math.random()*10) + 's';
+    container.appendChild(p);
+  }
+})();
+
+const categories = [
+  { max:16,    label:'やせすぎ',       emoji:'🥺', tag:'tag-thin',   msg:'少しやせすぎかも…。無理なダイエットはお肌にも影響が出ちゃうから、しっかり栄養をとってね。', advice:'タンパク質（お肉・お魚・卵・大豆）を意識して摂りましょう。1日3食をベースに、間食でナッツやヨーグルトをプラスするのもおすすめです♪' },
+  { max:18.5,  label:'やせがた',       emoji:'🌸', tag:'tag-under',  msg:'スリムな体型ですね！でも、やせすぎは冷えや疲れやすさの原因にもなるので、バランスよく食べることも大切です。', advice:'筋力をつけると基礎代謝がアップして、冷え性改善にも◎ スクワットやヨガなど、おうちでできる軽い運動から始めてみましょう♪' },
+  { max:25,    label:'ふつう体型',     emoji:'✨', tag:'tag-normal',  msg:'とってもバランスのいい体型です！今の生活習慣を大切にしながら、心もカラダも健やかに過ごしましょう♡', advice:'今の調子をキープ！ 適度な運動と質のいい睡眠で、内側からキレイをめざしましょう。旬のお野菜やフルーツもたっぷりとってね♪' },
+  { max:30,    label:'ぽっちゃり',     emoji:'🍰', tag:'tag-over',    msg:'少しふっくらさん。急なダイエットよりも、日々の習慣を少しずつ見直すのが長続きのコツです♪', advice:'まずは毎日20分のウォーキングから！ お水をこまめに飲む、夜ごはんは腹八分目にするなど、小さな習慣の積み重ねが大きな変化につながりますよ♪' },
+  { max:35,    label:'ふくよか',       emoji:'💪', tag:'tag-obese1',  msg:'健康のためにも、少しずつ体重ケアを始めてみませんか？ 焦らず、できることからスタートしましょう。', advice:'食事は「減らす」より「選ぶ」のが大事。白米→玄米、ジュース→お水、揚げ物→蒸し料理など、置き換えるだけでもカロリーダウンできます♪ 楽しく続けられる運動を見つけるのもポイント！' },
+  { max:40,    label:'肥満（2度）',    emoji:'🌷', tag:'tag-obese2',  msg:'カラダへの負担が少し心配です。ひとりで悩まず、お医者さんや管理栄養士さんに相談してみるのもいい方法ですよ。', advice:'専門家のサポートを受けながら、食事と運動の両面からアプローチしましょう。まずはかかりつけ医に相談してみてくださいね。' },
+  { max:99,    label:'肥満（3度以上）',emoji:'🌼', tag:'tag-obese3',  msg:'健康リスクを減らすために、できるだけ早めに医療機関に相談することをおすすめします。あなたのペースで大丈夫ですよ。', advice:'医師の指導のもとで安全に体重管理を進めることが大切です。焦らず、一歩ずつ進めていきましょう。' },
+];
+
+function diagnose(){
+  const hInput = document.getElementById('height');
+  const wInput = document.getElementById('weight');
+  const h = parseFloat(hInput.value);
+  const w = parseFloat(wInput.value);
+
+  let hasError = false;
+
+  // バリデーション
+  if(!h || h < 100 || h > 250){
+    hInput.parentElement.classList.add('shake');
+    document.getElementById('heightError').classList.add('show');
+    setTimeout(()=> hInput.parentElement.classList.remove('shake'), 400);
+    hasError = true;
+  } else {
+    document.getElementById('heightError').classList.remove('show');
+  }
+
+  if(!w || w < 20 || w > 300){
+    wInput.parentElement.classList.add('shake');
+    document.getElementById('weightError').classList.add('show');
+    setTimeout(()=> wInput.parentElement.classList.remove('shake'), 400);
+    hasError = true;
+  } else {
+    document.getElementById('weightError').classList.remove('show');
+  }
+
+  if(hasError) return;
+
+  const hm = h / 100;
+  const bmi = w / (hm * hm);
+  const cat = categories.find(c => bmi < c.max) || categories[categories.length-1];
+  const idealW = (22 * hm * hm).toFixed(1);
+
+  // 表示
+  document.getElementById('resultEmoji').textContent = cat.emoji;
+  document.getElementById('resultType').textContent = cat.label;
+  document.getElementById('resultType').style.color =
+    bmi < 18.5 ? 'rgb(70,120,160)' :
+    bmi < 25   ? 'rgb(70,130,70)' :
+    bmi < 30   ? 'rgb(170,120,50)' : 'rgb(170,80,70)';
+
+  document.getElementById('resultTag').innerHTML =
+    `<span class="tag ${cat.tag}">${cat.label}</span>`;
+  document.getElementById('resultBmi').textContent =
+    `BMI ${bmi.toFixed(1)}（${h}cm ／ ${w}kg）`;
+  document.getElementById('resultMsg').textContent = cat.msg;
+  document.getElementById('adviceText').textContent = cat.advice;
+  document.getElementById('idealWeight').innerHTML =
+    `あなたの身長での理想体重（BMI 22）は <strong>${idealW}</strong> kg です`;
+
+  // BMI バーマーカー位置（BMI 14〜40 をマッピング）
+  const pct = Math.min(100, Math.max(0, ((bmi - 14) / (40 - 14)) * 100));
+  const marker = document.getElementById('bmiMarker');
+  marker.style.left = '0%';
+  requestAnimationFrame(()=>{
+    requestAnimationFrame(()=>{
+      marker.style.left = pct + '%';
+    });
+  });
+
+  document.getElementById('inputCard').style.display = 'none';
+  const rc = document.getElementById('resultCard');
+  rc.classList.remove('show');
+  void rc.offsetWidth;
+  rc.classList.add('show');
+}
+
+function reset(){
+  document.getElementById('resultCard').classList.remove('show');
+  document.getElementById('resultCard').style.display = 'none';
+  document.getElementById('inputCard').style.display = 'block';
+  document.getElementById('height').value = '';
+  document.getElementById('weight').value = '';
+  document.getElementById('heightError').classList.remove('show');
+  document.getElementById('weightError').classList.remove('show');
+}
+</script>
+</body>
+</html>
